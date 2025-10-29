@@ -88,7 +88,7 @@ if run_btn:
               SELECT a.employee_id, a.tgv, SAFE_DIVIDE(a.adjusted_score, b.baseline_score)*100 AS tgv_match_rate
               FROM `rakamin-476503.tgv_dataset.tgv_score` a
               LEFT JOIN baseline b USING (tgv)
-              WHERE a.employee_id = {selected_emp}
+              WHERE a.employee_id = '{selected_emp}'
             )
             SELECT tgv, ROUND(tgv_match_rate,2) AS tgv_match_rate
             FROM match_rate
