@@ -27,12 +27,12 @@ benchmark_ids = st.sidebar.text_input("Enter benchmark employee IDs (comma-separ
 run_btn = st.sidebar.button("Run Matching")
 
 if run_btn:
-    benchmark_list = [int(x.strip()) for x in benchmark_ids.split(',') if x.strip().isdigit()]
+    benchmark_list = [x.strip() for x in benchmark_ids.split(',') if x.strip()]
 
     if len(benchmark_list) == 0:
         st.error("Please input at least one valid employee ID.")
     else:
-        benchmark_str = ",".join(map(str, benchmark_list))
+        benchmark_str = ",".join([f"'{x}'" for x in benchmark_list])
 
         query = f"""WITH benchmark AS (
           SELECT DISTINCT employee_id
