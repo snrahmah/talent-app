@@ -3,3 +3,6 @@ google-cloud-bigquery
 pandas
 plotly
 pyyaml
+google-auth
+google-auth-oauthlib
+db-dtypes
