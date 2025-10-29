@@ -3,20 +3,26 @@ import streamlit as st
 from google.cloud import bigquery
 import pandas as pd
 import plotly.express as px
-import json
-import os
 from google.oauth2 import service_account
 
-key_dict = json.loads(st.secrets["google"])
-credentials = service_account.Credentials.from_service_account_info(key_dict)
+
+# Load BigQuery credentials from Streamlit Secrets
+
+try:
+    key_dict = st.secrets["google"] 
+    credentials = service_account.Credentials.from_service_account_info(key_dict)
+    client = bigquery.Client(credentials=credentials, project=key_dict["project_id"])
+except Exception as e:
+    st.error("Error loading BigQuery credentials. Ensure the Secrets has been set correctly.")
+    st.stop()
+
+
+# Streamlit UI
 
 st.set_page_config(page_title="AI Talent Match", layout="wide")
 st.title("AI Talent Match App")
 
-# BigQuery client
-client = bigquery.Client()
-
-st.sidebar.header("🔧 Benchmark Inputs")
+st.sidebar.header("Benchmark Inputs")
 benchmark_ids = st.sidebar.text_input("Enter benchmark employee IDs (comma-separated)", "312,335,175")
 run_btn = st.sidebar.button("Run Matching")
 
@@ -26,10 +32,8 @@ if run_btn:
     if len(benchmark_list) == 0:
         st.error("Please input at least one valid employee ID.")
     else:
-        # Convert benchmark list into BigQuery array
         benchmark_str = ",".join(map(str, benchmark_list))
 
-        # Main query (Step 2 logic)
         query = f"""WITH benchmark AS (
           SELECT DISTINCT employee_id
           FROM UNNEST([{benchmark_str}]) AS employee_id
