@@ -3,6 +3,12 @@ import streamlit as st
 from google.cloud import bigquery
 import pandas as pd
 import plotly.express as px
+import json
+import os
+from google.oauth2 import service_account
+
+key_dict = json.loads(st.secrets["google"])
+credentials = service_account.Credentials.from_service_account_info(key_dict)
 
 st.set_page_config(page_title="AI Talent Match", layout="wide")
 st.title("AI Talent Match App")
